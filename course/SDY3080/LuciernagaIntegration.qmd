@@ -1,7 +1,7 @@
 ---
 title: "Luciernaga Integration"
 author: "David Rach"
-date: 08-19-2026
+date: 08-28-2026
 format:
   html:
     toc: true
