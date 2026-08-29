@@ -34,6 +34,7 @@ project:
     - course/SDY3080/SignatureMatrices_slides.qmd
     - course/SDY3080/LuciernagaIntegration.qmd
     - course/SDY3080/LuciernagaIntegration_Violet.qmd
+    - course/SDY3080/LuciernagaIntegration_Blue.qmd
 execute:
   freeze: auto
 website:
