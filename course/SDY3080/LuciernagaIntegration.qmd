@@ -723,31 +723,31 @@ For BUV805, we only retrieved 1 signature, likely due to the antigen-fluorophore
 
 ![](images/Violet_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Violet" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd).  
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Violet" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd).  
 
 ### Blue
 
 ![](images/Blue_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Blue" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Blue" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd). 
 
-### YellowGreen
+### Yellow-Green
 
 ![](images/YG_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Yellow-Green" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Yellow-Green" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd). 
 
 ### Red
 
 ![](images/Red_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Red" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Red.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Red" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Red.qmd). 
 
 ### Autofluorescence
 
 ![](images/Unstained_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Unstained" signatures has been migrated [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Unstained" signatures has been migrated [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd). 
 
 # Take Away
 
