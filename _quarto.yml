@@ -35,6 +35,7 @@ project:
     - course/SDY3080/LuciernagaIntegration.qmd
     - course/SDY3080/LuciernagaIntegration_Violet.qmd
     - course/SDY3080/LuciernagaIntegration_Blue.qmd
+    - course/SDY3080/LuciernagaIntegration_YellowGreen.qmd
 execute:
   freeze: auto
 website:

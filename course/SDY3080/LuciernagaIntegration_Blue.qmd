@@ -218,7 +218,7 @@ Spark Blue 550 appears to be in good shape for the majority of the cells that ar
 
 #### PerCP-Cy5.5
 
-Alright, worst fluorophore, [PerCP-Cy5.5](https://www.biolegend.com/en-us/products/percp-cyanine5-5-anti-human-cd26-antibody-10205), you are up :/). For this panel, it is conjugated to [CD26](https://en.wikipedia.org/wiki/Dipeptidyl_peptidase-4), which should be present on various T cell subsets. So it has the potential to be sufficiently bright. However, this will depend on the overall brightness of the PerCP-Cy5.5, which will depend on how the tandem inside the individual fluorophore vial is doing.
+Alright, worst fluorophore, [PerCP-Cy5.5](https://www.biolegend.com/en-us/products/percp-cyanine5-5-anti-human-cd26-antibody-10205), you are up :/. For this panel, it is conjugated to [CD26](https://en.wikipedia.org/wiki/Dipeptidyl_peptidase-4), which should be present on various T cell subsets. So it has the potential to be sufficiently bright. However, this will depend on the overall brightness of the PerCP-Cy5.5, which will depend on how the tandem inside the individual fluorophore vial is doing.
 
 ```{r}
 WorstFluorophore <- LuciernagaIntegration(template=KeptCells[19,],

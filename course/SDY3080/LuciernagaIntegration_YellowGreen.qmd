@@ -26,7 +26,7 @@ For screen-shot slides, click [here]()
 
 # Background
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser.This walk-through if for the "Yellow-Green" laser.
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the "Yellow-Green" laser.
 
 - To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
 - For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
@@ -52,11 +52,11 @@ library(ggplot2)
 Designate your file paths to the storage and output folder locations. 
 
 ```{r}
-#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
-StorageLocation <- file.path("data", "SDY3080")
+StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+#StorageLocation <- file.path("data", "SDY3080")
 
-#OutputLocation <- file.path("course", "SDY3080", "outputs")
-OutputLocation <- file.path("outputs")
+OutputLocation <- file.path("course", "SDY3080", "outputs")
+#OutputLocation <- file.path("outputs")
 ```
 
 Bring in the pre-gated GatingSet object (which was carried out as part of the [Signature Matrices](/course/SDY3080/SignatureMatrices.qmd) walkthrough).
@@ -78,82 +78,77 @@ And with that, we are set!
 
 ### YellowGreen
 
-We now jump to the Yellow-green laser (as this 29-color panel was originally intended for a 4-laser system so didn't take full advantage of the blue laser detectors). As many of these fluorophores are PE conjugates, the main cause of concern for cells is non-specific staining arising from antigen-presenting cells tendency to latch-on/endocytose the PE. We will see if we can spot any of these cases as we move through the cell single-color controls. 
+![](images/YG_Laser.png)
+
+Next up, we have the Yellow-green laser. Originally, the 29-fluorophore panel had been designed for use on a 4-laser Cytek Aurora, so the switch to a 5-laser instrument meant the original panel's fluorophores got distributed across both the blue and yellow-green lasers (and why Blue has only 3 fluorophores). 
+
+In terms of what to expect, autofluorescence is not as much of an issue for the yellow-green laser typically for PBMCs. However, many of the fluorophores are PE conjugates, which might contribute to tandem degradation style issues. Importnatly, many cell types will non-specifically stain for PE dyes (due to tendency to either endocytose or latch-on), which can impact the use of internal negatives for background subtraction in panels that don't add blocking reagents. We will see if we can identify any of these outcomes as we go for this panels cell single-color unmixing controls. 
 
 #### PE
 
-First off on the Yellow-green, we have our [PE](https://www.biolegend.com/en-us/products/pe-anti-human-cd314-nkg2d-antibody-3016) fluorophore, conjugated in this case to [NKG2D](https://en.wikipedia.org/wiki/NKG2D). This marker is well expressed on the NK cells, so will likely be a bright antigen x fluorophore combination. 
+Starting of the Yellow-green laser, we have our [PE](https://www.biolegend.com/en-us/products/pe-anti-human-cd314-nkg2d-antibody-3016) fluorophore, in this case conjugated to [NKG2D](https://en.wikipedia.org/wiki/NKG2D). As this marker is widely expressed on NK cells, it should result in a bright antigen-by-fluorophore combination. 
 
 ```{r}
-PE <- LuciernagaIntegration(template=KeptCells[20,], gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+PE <- LuciernagaIntegration(template=KeptCells[20,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
 ```
 
-Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+Lets begin by checking the "LinearSlices_Plot" output, to see what the effect would have been on the signature if we had split the region within our "positive" gate into 10% bins across based on MFI for the peak-detector. 
 
 ```{r}
 Plot <- PE$LinearSlices_Plot
 plotly::ggplotly(Plot)
 ```
 
-Looking at the signatures retrieved from the 10% bins across our "positive" gate, we can see the typical pattern of the two fluorophore peaks (YG1, B4) appearing consistent, with a bit of a step ladder appearance from autofluorescence residuals around the V8 detector
-
-Having noted this, lets check out the `LuciernagaQC()` grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures". 
+Similar to what we have encountered for other bright antigen-by-fluorophore combinations, everything appears consistent for the fluorophore peaks, with just a hint of uncertainty around the "V7-A" detector. With this noted, we can check the `LuciernagaQC()` output to see variant signatures returned when we group individual cell normalized signatures based on shared peaks of similar height. 
 
 ```{r}
 Plot <- PE$LuciernagaQC_Signatures
 plotly::ggplotly(Plot)
 ```
 
-So overall, probably not quite as bright a combination as we originally anticipated. We will need to check vs. the reference signature to determine whether we are expecting the PE to have some emission on the V8. 
-
-```{r}
-Plots <- QC_ReferenceLibrary("PE$", 64, returnPlots=TRUE)
-plotly::ggplotly(Plots[[2]])
-```
-
-So yep, we are expecting some contribution from the fluorophore, but relatively around V8 (not soo much of the shoulder detectors)
-
-Lets visualize this same plot in an alternative fashion, checking to see where the median signature ends up by comparison. 
+We get back a few signature variants, a couple with some evidence of autofluoresence residual contribution to the overall signatures around the "V8-A" detector. We can next proceed to check the `QC_Amalgamate()` output, to see where the the median signature ends up.
 
 ```{r}
 Plot <- PE$LuciernagaQC_AmalgamatedPlot
 plotly::ggplotly(Plot)
 ```
 
+Median signature ends up with a bit of autofluorescence residual present, which likely means these signatures are represented by a decent portion of cells within the gated region. Lets check the proportion plot
 
-Lets retrieve the underlying data for this plot, and keep the Average, as well as variants with minimal and maxinum autofluorescence contribution of the autofluorescence peak. 
+```{r}
+Plot <- PE$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+This is probably one of the first fluorophores we encountered where there was relatively even distribution across multiple signature variants, which is rather interesting. 
+
+To investigate further, we can retrieve the underlying data for this plot, and keep the Average, as well as variants with minimal and maxinum autofluorescence contribution of the autofluorescence peak. 
 
 ```{r}
 Data <- PE$AveragedSignature_Data |>
-   filter(Cluster %in% c("Average", "YG1_10-B4_08-V8_04", "YG1_10-B4_07-V8_05"))
+   filter(Cluster %in% c("YG1_10-B4_07", "Average", "YG1_10-B4_06-V8_03"))
 ```
 
 Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference. 
 
 ```{r}
-QC_WhatsThis(x="YG1_10-B4_08-V8_04", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE)
+QC_WhatsThis(x="YG1_10-B4_07", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
 ```
 
 ```{r}
-QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE)
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
 ```
 
 ```{r}
-QC_WhatsThis(x="YG1_10-B4_07-V8_05", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE)
+QC_WhatsThis(x="YG1_10-B4_06-V8_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.98
 ```
 
-So average is the closest with a cosine of 0.98, then 0.94, and 0.90. 
-
-```{r}
-Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
-plotly::ggplotly(Plot[[2]])
-```
-
-If we visualized the difference in these angles, we would see the following
+So similar overall, if we visualized the difference in these cosine values, we would see the following
 
 ```{r}
 #| code-fold: TRUE
-cos_vals <- c(1, 0.98, 0.94, 0.9)
+cos_vals <- c(1, 0.99, 0.98)
 theta <- acos(cos_vals)
 
 df <- data.frame(
@@ -175,45 +170,47 @@ ggplot(df) +
   theme_bw()
 ```
 
-Before we go on, lets evaluate the proportion of cells within our positive gated region as distributed across our signature variants
+All the above seem a bit far off from the reference, we can go ahead and verify what the difference actually is by re-running the "Average" signature but set the 'returnPlots' argument to TRUE. 
 
 ```{r}
-Plot <- PE$ProportionPlot
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)[[2]] #0.99
 plotly::ggplotly(Plot)
 ```
 
 :::{.callout-tip = "Pass"}
-Overall, our average is fairly close to what we expect to see for the reference signature. A couple things to note, the secondary peak B4 is higher than the reference. Whether this is due to instrument-specific gain settings (or because something clipping the main YG1) would be something we should check vs. other PE signatures. We can also attempt to clean up some of the autofluorescence residual sholder by shifting the gate slightly to the right to reduce the contribution by including additional bright for PE cells. 
+
+Overall, the variant signatures for PE are relatively similar to each other. There is however a bit of a difference compared to the reference, with the secondary "B4-A" peak having greater proportion compared to the primary "YG1-A" peak for our single-color control than what was seen for the reference. 
+
+Whether this is due to instrument-specific gain settings (or because something clipping the main YG1) would be something we should check vs. other PE signatures acquired on the same instrument to be able to make a determination.
+ 
+Overall, we can attempt to clean up some of the autofluorescence residual sholder by shifting the gate slightly, which should get rid of these dimmer cells, leaving only cells that are brighter for PE left to contribute to the overall signature.
 :::
 
 #### PE-Dazzle 594
 
-Next up, we have [PE-Dazzle 594](https://www.biolegend.com/en-us/products/pe-dazzle-594-anti-human-tnf-alpha-antibody-10268), which is conjugated to [TNFa](https://en.wikipedia.org/wiki/Tumor_necrosis_factor). Seeing as the cell single-color control used adult PBMCs stimulated with PMA-ionomycin, we expect this signal to be bright. However, it is on a tandem, so it may yet prove interesting. 
+Up next is [PE-Dazzle 594](https://www.biolegend.com/en-us/products/pe-dazzle-594-anti-human-tnf-alpha-antibody-10268), which is conjugated to [TNFa](https://en.wikipedia.org/wiki/Tumor_necrosis_factor). Since this cell single-color unmixing control was prepared with adult PBMCs, stimulated with PMA-ionomycin for 6-hours before intracellular staining, we can anticipate the overall signal to be bright. But since it is a PE-tandem, things may still prove to be interesting.
 
 ```{r}
-PEDazzle594 <- LuciernagaIntegration(template=KeptCells[21,], gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+PEDazzle594 <- LuciernagaIntegration(template=KeptCells[21,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
 ```
 
-Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+Lets first take a look at the "LinearSlices_Plot", to see what the effect would have been on the signature if we had split the region in our "positive" gate into 10% bins across. 
 
 ```{r}
 Plot <- PEDazzle594$LinearSlices_Plot
 plotly::ggplotly(Plot)
 ```
 
-Nice! Almost no variation whatsoever across any of the 10% bins. Having noted this, lets check out the `LuciernagaQC()` grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures". 
+Nice! Almost no variation whatsoever across any of the 10% bins. Having noted this, lets check out the `LuciernagaQC()` grouped individual cell normalized signatures output that is stored under "LuciernagaQC_Signatures". 
 
 ```{r}
 Plot <- PEDazzle594$LuciernagaQC_Signatures
 plotly::ggplotly(Plot)
 ```
 
-Alright, barely any variant signatures by the `LuciernagaQC()` approach. Lets wrap this up and move to the next fluorophore
+Alright, barely any variant signatures by the `LuciernagaQC()` approach, being barely different on the "B6-A" detector (likely partially how rounding is carried out in the parent function). Lets quickly check to see how the median signature differs compared to the reference. 
 
-```{r}
-Plot <- PEDazzle594$LuciernagaQC_AmalgamatedPlot
-plotly::ggplotly(Plot)
-```
 ```{r}
 Data <- PEDazzle594$AveragedSignature_Data 
 ```
@@ -225,32 +222,42 @@ plotly::ggplotly(Plots[[2]])
 ```
 
 :::{.callout-tip title="Pass"}
-Fluorophore is in good condition, and the combination of antigen x fluorophore means we are getting a consistent signature for our gating region. Next!
+PE-Dazzle 594 is in good condition, with the signature variants being identical to the reference signature. On to the next fluorophore!
 :::
 
 
 #### PE-Cy5
 
-Next up, we have [PE-Cy5](bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/pe-cy-5-mouse-anti-human-cd25.555433), conjugated to [CD25](https://en.wikipedia.org/wiki/IL2RA). As the high-affinity IL-2 receptor, this antigen will be a little more distributed among the individual cell subsets, so lets see how this combination performs for this panel. 
+Up next we encounter [PE-Cy5](bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/pe-cy-5-mouse-anti-human-cd25.555433), which is conjugated to [CD25](https://en.wikipedia.org/wiki/IL2RA) in this panel. As the high-affinity IL-2 receptor, this antigen will be a little more sparsely distributed across individual cell subsets, so additional cells might need to be acquired for the single-color unmixing control depending on the donor. Antigen density is likely lower, which is one of the reasons it may have been paired with the usually bright PE-Cy5 fluorophore.
 
 ```{r}
 PECy5 <- LuciernagaIntegration(template=KeptCells[22,], gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
 ```
 
-Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+Lets first take a look at the "LinearSlices_Plot", to see what the effect would have been on the signature if we had split the region in our "positive" gate into 10% bins across based on increasing peak detector MFI. 
 
 ```{r}
 Plot <- PECy5$LinearSlices_Plot
 plotly::ggplotly(Plot)
 ```
 
-Oh no! As we place 10% bins across our "Positive" gate, we can already see that the signatures from each bin show a step-ladder for the autofluorescence peak detectors. Worse, they are already approaching the height of PE-Cy5's secondary peak (B8), suggesting this combination is really dim. Somehow, not what I expect when I hear the words PE-Cy5 normally. 
+Oh no!!! As we place 10% bins across our "Positive" gate, we can already see that the signatures from each bin show a step-ladder for the autofluorescence peak detectors. Worse, if we glance at the fluorophore driven peaks, we can note step-ladders for both the "B8-A" and "R2-A" detectors. In combination, this suggest the antigen-fluorophore combination at the very least is dimmer than anticipated, at worst, that the tandem might be breaking up. 
 
-Having noted this, lets check out the `LuciernagaQC()` grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures". 
+With this noted, lets check out the `LuciernagaQC()` output, to see what variant signatures we get back when we group individual cell normalized signatures together based on shared peaks of similar heights. 
 
 ```{r}
 Plot <- PECy5$LuciernagaQC_Signatures
 plotly::ggplotly(Plot)
+```
+
+Oh wow, truly something is badly off for this antigen-fluorophore combination. If we explore through the plotly plot, we can see there seems to be fluorophore signatures that are also entirely missing part of the PE-Cy5 expected peaks. 
+
+Before moving forward, lets try to rule out that some of what we see is due to using the internal autofluorescence for background subtraction (which if the cells are being non-specific stain from the PE, could contribute to some of the fuzzy caterpillars we can see in the interactive plot). 
+
+To do this, we will need to bring in the reference from the Unstained GatingSet. 
+
+```{r}
+print("External Unstained In Bound")
 ```
 
 And once again, the appearance appears to be not so bad (until we remember this is `LuciernagaQC()` getting rid of the resulting negatives). However, we can see that the B8 detector upon normalization appears like a step-ladder, which suggest we are having some tandem degradation occuring for this particular fluorophore. 
@@ -427,7 +434,7 @@ So definitely not a bright antigen x fluorophore combination, and some potential
 
 # Redirects
 
-Due to the sheer number of `plotly` `ggplotly()` plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the Unstained controls. 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through was for the Yellow-green laser fluorophores. 
 
 - To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
 - For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
