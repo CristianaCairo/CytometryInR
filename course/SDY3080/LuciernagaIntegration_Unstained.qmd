@@ -26,7 +26,7 @@ For screen-shot slides, click [here]()
 
 # Background
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the Unstained controls. 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel (plus unstained controls) in one go, we have broken the exploration into smaller chapters. This walk-through if for the Unstained controls. 
 
 - To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
 - For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
@@ -52,253 +52,246 @@ library(ggplot2)
 Designate your file paths to the storage and output folder locations. 
 
 ```{r}
-#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+# StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
 StorageLocation <- file.path("data", "SDY3080")
 
-#OutputLocation <- file.path("course", "SDY3080", "outputs")
+# OutputLocation <- file.path("course", "SDY3080", "outputs")
 OutputLocation <- file.path("outputs")
 ```
 
-Bring in the pre-gated GatingSet object (which was carried out as part of the [Signature Matrices](/course/SDY3080/SignatureMatrices.qmd) walkthrough).
+Bring in the pre-gated GatingSet object (which was carried out as part of the [Set Up](/course/SDY3080/SetUp.qmd) walkthrough).
 
 ```{r}
-CellSCPath <- file.path(OutputLocation, "CellsSC_GS_Amplified.gs")
-CellsSC_GatingSet <- load_gs(CellSCPath)
+UnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS.gs")
+Unstained_GatingSet <- load_gs(UnstainedHere)
 ```
 
-And bring in the template needed to run the `LuciernagaIntegration()` wrapper function (which we generated [here](/course/SDY3080/LuciernagaIntegration.qmd#assembling-template)). 
+We can then double check the existing gates. 
 
 ```{r}
-#| echo: FALSE
-SaveThisTemplateHere <- file.path(OutputLocation, "KeptCells.csv")
-KeptCells <- read.csv(SaveThisTemplateHere, check.names=FALSE)
+plot(Unstained_GatingSet)
+```
+
+The last component we will need to run  `LuciernagaIntegration()` wrapper function is the template data.frame. Since we are just looking at the unstained unmixing controls, this doesn't need to be as highly detailed as the one we used for the single-color unmixing controls, so we can just generate out a generic one using `mutate()`.
+
+```{r}
+Updated <- pData(Unstained_GatingSet) |>
+    mutate(Type="Cells",
+     Fluorophore="scatter",
+     Antigen="Autofluorescence",
+     Detector="V7",
+     Negative="NoSubtraction")
+
+rownames(Updated) <- NULL
+```
+
+```{r}
+Updated
 ```
 
 And with that, we are set! 
 
 ## Unstained Controls
 
-```{r}
-UnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS_Amplified.gs")
-Unstained_GatingSet <- load_gs(UnstainedHere)
-
-Updated <- pData(Unstained_GatingSet) |>  mutate(Type="Cells", Fluorophore="scatter",
- Antigen="Autofluorescence", Detector="V7", Negative="NoSubtraction")
-```
 
 
 ### CBMC
 
+#### INF052 Ctrl
+
+We can start off by first running `LuciernagaIntegration()` using the GatingSet object, and the corresponding row for the specimen of interest in the template. The main thing to remember, since this is an unstained unmixing control, we need to set "Unstained" argument equal to TRUE. 
+
 ```{r}
-INF052Ctrl <- LuciernagaIntegration(template=Updated[1,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
+INF052Ctrl <- LuciernagaIntegration(template=Updated[1,],
+ gs=Unstained_GatingSet, GuessSimilar=FALSE, Unstained=TRUE,
+ inverse.transform=TRUE)[[1]]
+```
 
-INF052Ctrl$LuciernagaQC_Signatures
+First off, we can check the "LinearSlices" output, to see if there would have been any differences in retrieved normalized signatures if we had split our gated cells into 10% bins of increasing MFI for the peak "V7-A" detector. 
 
-INF052Ctrl$LuciernagaQC_AmalgamatedPlot
+```{r}
+Plot <- INF052Ctrl$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
 
-INF052Ctrl$GuessSimilar_Plot
+Rather minor differences across the board, especially compared to what we have encountered previously for fluorophores. What about if we had used `LuciernagaQC()` and grouped normalized signatures of individual cells on the basis of shared peaks of similar heights?
 
-INF052Ctrl$ProportionPlot
+```{r}
+Plot <- INF052Ctrl$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
 
-INF052Ctrl$CosineSimilarityPlot
+We start encountering some of the variation on the per cell level, and everything starts appearing as fuzzy caterpillars. Lets see where the median measurements end up based on our `QC_Amalgamate()` output.
 
-INF052Ctrl$LinearSlices_Plot
+```{r}
+Plot <- INF052Ctrl$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+Within our unstained cells in the "scatter" gate, we can see most are uniform for "V7-A" detector, but there is variable contribution to the signatures present for both "UV7-A" and "B3-A" (having values greater than 60% of the peak "V7-A" detector). Lets focus on these, and try to get an understanding of how abundant they might actually be. We can do this by checking the "ProportionPlot" output. 
+
+```{r}
+Plot <- INF052Ctrl$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So for unstained cells with "B3-A" contribution >60% of the "V7-A" peak detector height, it looks to be around 5% (main representative being "V7_10-B3_07-UV8_04"). For "UV7-A",  signatures with >50% of the "V7-A" peak detector are rather rare, with no individual signature crossing the 1% threshold. 
+
+If we check the Cosine plot, we can see that overall, the various signatures are mostly similar to each other, with a few exceptions. 
+
+```{r}
+Plot <- INF052Ctrl$CosineSimilarityPlot
+plotly::ggplotly(Plot)
+```
+
+We might also be interested in seeing how similar it might be to our autofluoresce-like fluorophores. 
+
+```{r}
+Data <- INF052Ctrl$AveragedSignature_Data |> filter(Cluster %in% "Average")
 ```
 
 ```{r}
-INF052PMA <- LuciernagaIntegration(template=Updated[2,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-INF052PMA$LuciernagaQC_Signatures
-
-INF052PMA$LuciernagaQC_AmalgamatedPlot
-
-INF052PMA$GuessSimilar_Plot
-
-INF052PMA$ProportionPlot
-
-INF052PMA$CosineSimilarityPlot
-
-INF052PMA$LinearSlices_Plot
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
 ```
 
-```{r}
-INF171Ctrl <- LuciernagaIntegration(template=Updated[3,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
+:::{.callout-tip title="Pass"}
+Overall, most of the signatures appear to be normal, with the variants sharing peak detectors, but differing in height of their secondary and third peaks. Even these variant signatures differing substantially are relatively rare overall. 
+:::
 
-INF171Ctrl$LuciernagaQC_Signatures
-
-INF171Ctrl$LuciernagaQC_AmalgamatedPlot
-
-INF171Ctrl$GuessSimilar_Plot
-
-INF171Ctrl$ProportionPlot
-
-INF171Ctrl$CosineSimilarityPlot
-
-INF171Ctrl$LinearSlices_Plot
-```
-
-```{r}
-INF171PMA <- LuciernagaIntegration(template=Updated[4,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-INF171PMA$LuciernagaQC_Signatures
-
-INF171PMA$LuciernagaQC_AmalgamatedPlot
-
-INF171PMA$GuessSimilar_Plot
-
-INF171PMA$ProportionPlot
-
-INF171PMA$CosineSimilarityPlot
-
-INF171PMA$LinearSlices_Plot
-```
-
-```{r}
-INF182Ctrl <- LuciernagaIntegration(template=Updated[5,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-INF182Ctrl$LuciernagaQC_Signatures
-
-INF182Ctrl$LuciernagaQC_AmalgamatedPlot
-
-INF182Ctrl$GuessSimilar_Plot
-
-INF182Ctrl$ProportionPlot
-
-INF182Ctrl$CosineSimilarityPlot
-
-INF182Ctrl$LinearSlices_Plot
-```
-
-```{r}
-INF182PMA <- LuciernagaIntegration(template=Updated[6,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-INF182PMA$LuciernagaQC_Signatures
-
-INF182PMA$LuciernagaQC_AmalgamatedPlot
-
-INF182PMA$GuessSimilar_Plot
-
-INF182PMA$ProportionPlot
-
-INF182PMA$CosineSimilarityPlot
-
-INF182PMA$LinearSlices_Plot
-```
-
-```{r}
-INF281Ctrl <- LuciernagaIntegration(template=Updated[7,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-INF281Ctrl$LuciernagaQC_Signatures
-
-INF281Ctrl$LuciernagaQC_AmalgamatedPlot
-
-INF281Ctrl$GuessSimilar_Plot
-
-INF281Ctrl$ProportionPlot
-
-INF281Ctrl$CosineSimilarityPlot
-
-INF281Ctrl$LinearSlices_Plot
-```
-
-```{r}
-INF281PMA <- LuciernagaIntegration(template=Updated[8,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-INF281PMA$LuciernagaQC_Signatures
-
-INF281PMA$LuciernagaQC_AmalgamatedPlot
-
-INF281PMA$GuessSimilar_Plot
-
-INF281PMA$ProportionPlot
-
-INF281PMA$CosineSimilarityPlot
-
-INF281PMA$LinearSlices_Plot
-```
 
 ### PBMC
 
+#### ND006 Control
+
+We can start off by first running `LuciernagaIntegration()` using the GatingSet object, and the corresponding row for the specimen of interest in the template. The main thing to remember, since this is an unstained unmixing control, we need to set "Unstained" argument equal to TRUE. 
+
 ```{r}
-ND006Ctrl <- LuciernagaIntegration(template=Updated[9,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
+ND006Ctrl <- LuciernagaIntegration(template=Updated[2,],
+ gs=Unstained_GatingSet, GuessSimilar=FALSE, Unstained=TRUE,
+ inverse.transform=TRUE)[[1]]
+```
 
-ND006Ctrl$LuciernagaQC_Signatures
+First off, we can check the "LinearSlices" output, to see if there would have been any differences in retrieved normalized signatures if we had split our gated cells into 10% bins of increasing MFI for the peak "V7-A" detector. 
 
-ND006Ctrl$LuciernagaQC_AmalgamatedPlot
+```{r}
+Plot <- ND006Ctrl$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
 
-ND006Ctrl$GuessSimilar_Plot
+Rather minor differences across the board, especially compared to what we have encountered previously for fluorophores. What about if we had used `LuciernagaQC()` and grouped normalized signatures of individual cells on the basis of shared peaks of similar heights?
 
-ND006Ctrl$ProportionPlot
+```{r}
+Plot <- ND006Ctrl$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
 
-ND006Ctrl$CosineSimilarityPlot
+We start encountering some of the variation on the per cell level, and everything starts appearing as fuzzy caterpillars. Lets see where the median measurements end up based on our `QC_Amalgamate()` output.
 
-ND006Ctrl$LinearSlices_Plot
+```{r}
+Plot <- ND006Ctrl$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+Within our unstained cells in the "scatter" gate, we can see most are uniform for "V7-A" detector, but there is variable contribution to the signatures present for both "UV7-A" and "B3-A" (having values greater than 60% of the peak "V7-A" detector). Lets focus on these, and try to get an understanding of how abundant they might actually be. We can do this by checking the "ProportionPlot" output. 
+
+```{r}
+Plot <- ND006Ctrl$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So for unstained cells with "B3-A" contribution >60% of the "V7-A" peak detector height, it looks to be around 5% (main representative being "V7_10-B3_07-UV8_04"). For "UV7-A",  signatures with >50% of the "V7-A" peak detector are rather rare, with no individual signature crossing the 1% threshold. 
+
+If we check the Cosine plot, we can see that overall, the various signatures are mostly similar to each other, with a few exceptions. 
+
+```{r}
+Plot <- ND006Ctrl$CosineSimilarityPlot
+plotly::ggplotly(Plot)
+```
+
+We might also be interested in seeing how similar it might be to our autofluoresce-like fluorophores. 
+
+```{r}
+Data <- ND006Ctrl$AveragedSignature_Data |> filter(Cluster %in% "Average")
 ```
 
 ```{r}
-ND006PMA <- LuciernagaIntegration(template=Updated[10,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
 
-ND006PMA$LuciernagaQC_Signatures
+:::{.callout-tip title="Pass"}
+Overall, most of the signatures appear to be normal, with the variants sharing peak detectors, but differing in height of their secondary and third peaks. Even these variant signatures differing substantially are relatively rare overall. 
+:::
 
-ND006PMA$LuciernagaQC_AmalgamatedPlot
+#### ND006 PMA
 
-ND006PMA$GuessSimilar_Plot
+We can start off by first running `LuciernagaIntegration()` using the GatingSet object, and the corresponding row for the specimen of interest in the template. The main thing to remember, since this is an unstained unmixing control, we need to set "Unstained" argument equal to TRUE. 
 
-ND006PMA$ProportionPlot
+```{r}
+ND006PMA <- LuciernagaIntegration(template=Updated[3,],
+ gs=Unstained_GatingSet, GuessSimilar=FALSE, Unstained=TRUE,
+ inverse.transform=TRUE)[[1]]
+```
 
-ND006PMA$CosineSimilarityPlot
+First off, we can check the "LinearSlices" output, to see if there would have been any differences in retrieved normalized signatures if we had split our gated cells into 10% bins of increasing MFI for the peak "V7-A" detector. 
 
-ND006PMA$LinearSlices_Plot
+```{r}
+Plot <- ND006PMA$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+Rather minor differences across the board, especially compared to what we have encountered previously for fluorophores. What about if we had used `LuciernagaQC()` and grouped normalized signatures of individual cells on the basis of shared peaks of similar heights?
+
+```{r}
+Plot <- ND006PMA$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+We start encountering some of the variation on the per cell level, and everything starts appearing as fuzzy caterpillars. Lets see where the median measurements end up based on our `QC_Amalgamate()` output.
+
+```{r}
+Plot <- ND006PMA$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+Within our unstained cells in the "scatter" gate, we can see most are uniform for "V7-A" detector, but there is variable contribution to the signatures present for both "UV7-A" and "B3-A" (having values greater than 60% of the peak "V7-A" detector). Lets focus on these, and try to get an understanding of how abundant they might actually be. We can do this by checking the "ProportionPlot" output. 
+
+```{r}
+Plot <- ND006PMA$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So for unstained cells with "B3-A" contribution >60% of the "V7-A" peak detector height, it looks to be around 5% (main representative being "V7_10-B3_07-UV8_04"). For "UV7-A",  signatures with >50% of the "V7-A" peak detector are rather rare, with no individual signature crossing the 1% threshold. 
+
+If we check the Cosine plot, we can see that overall, the various signatures are mostly similar to each other, with a few exceptions. 
+
+```{r}
+Plot <- ND006PMA$CosineSimilarityPlot
+plotly::ggplotly(Plot)
+```
+
+We might also be interested in seeing how similar it might be to our autofluoresce-like fluorophores. 
+
+```{r}
+Data <- ND006PMA$AveragedSignature_Data |> filter(Cluster %in% "Average")
 ```
 
 ```{r}
-ND050Ctrl <- LuciernagaIntegration(template=Updated[11,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-ND050Ctrl$LuciernagaQC_Signatures
-
-ND050Ctrl$LuciernagaQC_AmalgamatedPlot
-
-ND050Ctrl$GuessSimilar_Plot
-
-ND050Ctrl$ProportionPlot
-
-ND050Ctrl$CosineSimilarityPlot
-
-ND050Ctrl$LinearSlices_Plot
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
 ```
 
-
-```{r}
-ND050PMA <- LuciernagaIntegration(template=Updated[12,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
-  Unstained=TRUE, inverse.transform=FALSE)
-
-ND050PMA$LuciernagaQC_Signatures
-
-ND050PMA$LuciernagaQC_AmalgamatedPlot
-
-ND050PMA$GuessSimilar_Plot
-
-ND050PMA$ProportionPlot
-
-ND050PMA$CosineSimilarityPlot
-
-ND050PMA$LinearSlices_Plot
-```
+:::{.callout-tip title="Pass"}
+Overall, most of the signatures appear to be normal, with the variants sharing peak detectors, but differing in height of their secondary and third peaks. Even these variant signatures differing substantially are relatively rare overall. 
+:::
 
 # Redirects
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the Unstained controls. 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel (plus unstained controls) in one go, we have broken the exploration into smaller chapters. This walk-through if for the Unstained controls. 
 
 - To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
 - For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)

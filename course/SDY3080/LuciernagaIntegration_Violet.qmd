@@ -528,7 +528,7 @@ ggplot(df) +
   theme_bw()
 ```
 
-:::{.callout-caution title="Pass"}
+:::{.callout-tip title="Pass"}
 Overall, our BV605 single-color unmixing control is in good shape, with the retrieved signature variants being minor, and not overly represented in the gating population. If I really wanted to, we could move the gate 1 mm to the right to likely eliminate them, but for now, next fluorophore!
 :::
 
