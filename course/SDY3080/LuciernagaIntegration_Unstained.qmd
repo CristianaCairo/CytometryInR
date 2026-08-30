@@ -52,11 +52,11 @@ library(ggplot2)
 Designate your file paths to the storage and output folder locations. 
 
 ```{r}
-StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
-#StorageLocation <- file.path("data", "SDY3080")
+#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+StorageLocation <- file.path("data", "SDY3080")
 
-OutputLocation <- file.path("course", "SDY3080", "outputs")
-#OutputLocation <- file.path("outputs")
+#OutputLocation <- file.path("course", "SDY3080", "outputs")
+OutputLocation <- file.path("outputs")
 ```
 
 Bring in the pre-gated GatingSet object (which was carried out as part of the [Set Up](/course/SDY3080/SetUp.qmd) walkthrough).

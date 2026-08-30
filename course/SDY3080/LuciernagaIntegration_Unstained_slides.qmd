@@ -82,11 +82,11 @@ Designate your file paths to the storage and output folder locations.
 
 ::: {.fragment}
 ```{r}
-StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
-#StorageLocation <- file.path("data", "SDY3080")
+#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+StorageLocation <- file.path("data", "SDY3080")
 
-OutputLocation <- file.path("course", "SDY3080", "outputs")
-#OutputLocation <- file.path("outputs")
+#OutputLocation <- file.path("course", "SDY3080", "outputs")
+OutputLocation <- file.path("outputs")
 ```
 
 :::
