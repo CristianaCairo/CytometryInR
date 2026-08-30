@@ -336,6 +336,7 @@ In terms of signatures, this one should be interesting, since the antibody was a
 :::
 
 ---
+
 ::: {.fragment}
 ::: {.callout-tip title="."}
 However, there is also the risk that the additional exposure in culture may have resulted in non-specific staining for the fluorophore across all cells regardless if they degranulated. Additionally, being in culture with metabollically active cells for the extended period could mean the fluorophore was exposed to reactive-oxygen species (ROS) for longer, and may have degraded. 
@@ -464,7 +465,10 @@ So both signatures end up with a cosine of 0.99. If we visualized these cosines,
 :::
 :::
 
+
+
 ::: {.fragment}
+
 ```{r}
 #| code-fold: TRUE
 cos_vals <- c(1, 0.99)
@@ -491,8 +495,6 @@ ggplot(df) +
 
 :::
 
----
-
 ::: {.fragment}
 ::: {.callout-tip title="."}
 And lets check vs. the reference in the signature plot. 
@@ -501,7 +503,8 @@ And lets check vs. the reference in the signature plot.
 
 ::: {.fragment}
 ```{r}
-QC_WhatsThis(x="R4_10-YG7_05-V13_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)[[2]] |> plotly::ggplotly()
+QC_WhatsThis(x="R4_10-YG7_05-V13_02", columnname="Cluster",
+ data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)[[2]] |> plotly::ggplotly()
 ```
 
 :::
