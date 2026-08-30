@@ -18,7 +18,7 @@ execute:
 
 For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
 
-For screen-shot slides, click [here]()
+For screen-shot slides, click [here](/course/SDY3080/LuciernagaIntegration_slides.qmd)
 
 <br>
 
@@ -779,7 +779,17 @@ And then, we also encountered 6 problematic cell single-color unmixing controls.
 
 ![](images/FAIL_APCFire810.png)
 
-While differing in their extent, BUV737, PE-Cy5 and APC-Fire 810 are in the worst shape, and would likely cause issues with the unmixing of the full-stained samples if they were included within the unmixing matrix. 
+While differing in their extent, BUV737, PE-Cy5 and APC-Fire 810 are in the worst shape, and would likely cause issues with the unmixing of the full-stained samples if they were included within the unmixing matrix.
+
+Likewise, we looked at unstained samples and characterized the autofluorescence variation that is present within. Main things we noticed were shift in secondary peak usage for cord blood vs peripheral blood mononuclear cells, and some interesting variation in the height of the secondary "UV7" detector that ties into how similar the signature compares to our autofluorescence-similar fluorophores. 
+
+- INF052 Ctrl (CBMC)
+
+![](images/CBMCCtrl.png)
+
+- ND006 Ctrl (PBMC)
+
+![](images/AdultPBMCCtrl.png)
 
 We will circle back to these bad unmixing control signatures during [Week 15](/Schedule.qmd#evaluating-unmixing) and evaluate what kind of unmixing errors they would generate compared to full-stained samples that had been unmixed with more representative fluorophore signatures. Until then, have fun looking at your own single-color unmixing controls, and make sure to share any interesting tandem-degradation finds on the [Discussions Page](https://github.com/UMGCCCFCSR/CytometryInR/discussions)
 
