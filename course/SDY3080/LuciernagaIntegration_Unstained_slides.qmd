@@ -1,13 +1,17 @@
 ---
 title: "Luciernaga Integration - Unstained"
 author: "David Rach"
-date: 08-28-2026
+date: 08-30-2026
 format:
-  html:
-    toc: true
-    toc-depth: 5
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
 execute:
   echo: true
+  warning: false
+  message: true
 ---
 
 ![](/images/WebsiteBanner.png)
@@ -822,3 +826,7 @@ Due to the sheer number of `plotly` `ggplotly()` interactive plots that the webs
 ::: {style="text-align: right;"}
 [![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
+
+---
+
+![](images/TakeAway4.jpg)
