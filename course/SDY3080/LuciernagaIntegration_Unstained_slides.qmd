@@ -4,6 +4,8 @@ author: "David Rach"
 date: 08-30-2026
 format:
   revealjs:
+    width: 960
+    height: 800
     theme: default
     slide-number: true
     incremental: true
@@ -246,6 +248,14 @@ First off, we can check the "LinearSlices" output, to see if there would have be
 ::: {.fragment}
 ```{r}
 Plot <- INF052Ctrl$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -262,6 +272,14 @@ Overall, for our CBMC specimen, we see minor differences across the board, espec
 ::: {.fragment}
 ```{r}
 Plot <- INF052Ctrl$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -286,6 +304,14 @@ To see how this looks like overall, lets see where the median measurements end u
 ::: {.fragment}
 ```{r}
 Plot <- INF052Ctrl$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -310,6 +336,14 @@ We can start this process by first checking the "ProportionPlot" output.
 ::: {.fragment}
 ```{r}
 Plot <- INF052Ctrl$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -340,6 +374,14 @@ Checking the cosine plot, we can see that overall, the various signatures are mo
 ::: {.fragment}
 ```{r}
 Plot <- INF052Ctrl$CosineSimilarityPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -369,6 +411,14 @@ Data <- INF052Ctrl$AveragedSignature_Data |>
 Plot <- QC_WhatsThis(x="Average", columnname="Cluster",
  data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
 Plot[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot[[2]])
 ```
 
@@ -411,6 +461,8 @@ We will explore how these differences impact the unmixing of autofluorescence-si
 Overall, most of the signatures appear to be normal/typical for fixed cells, with all the variants sharing primary peak detector ("V7-A"), but differing in height of their secondary ("B3-A") and third peaks ("UV7-A"). Variant signatures that differed substantially in their heights for these secondary and tertiary peaks were relatively rare overall. So first impression, this would likely unmix normally using a single-unstained signature. 
 :::
 
+---
+
 
 ### PBMC
 
@@ -452,6 +504,14 @@ First off, we can check the "LinearSlices" output, to see if there would have be
 ::: {.fragment}
 ```{r}
 Plot <- ND006Ctrl$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -468,6 +528,14 @@ Rather minor differences across the board, especially compared to what we have e
 ::: {.fragment}
 ```{r}
 Plot <- ND006Ctrl$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -492,6 +560,14 @@ Lets see where the median measurements end up based on our `QC_Amalgamate()` out
 ::: {.fragment}
 ```{r}
 Plot <- ND006Ctrl$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -508,6 +584,14 @@ Within our unstained cells in the "scatter" gate, we can see most are uniform fo
 ::: {.fragment}
 ```{r}
 Plot <- ND006Ctrl$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -538,6 +622,14 @@ If we check the Cosine plot, we can see these examples in action.
 ::: {.fragment}
 ```{r}
 Plot <- ND006Ctrl$CosineSimilarityPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -564,6 +656,14 @@ Data <- ND006Ctrl$AveragedSignature_Data |> filter(Cluster %in% c("UV7_10-UV8_09
 ```{r}
 Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
 Plot[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot[[2]])
 ```
 
@@ -640,6 +740,14 @@ First off, we can check the "LinearSlices" output, to see if there would have be
 ::: {.fragment}
 ```{r}
 Plot <- ND006PMA$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -656,6 +764,14 @@ Rather minor differences across the board, especially compared to what we have e
 ::: {.fragment}
 ```{r}
 Plot <- ND006PMA$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -672,6 +788,14 @@ Still getting fuzzy caterpillars (as we would anticipate for unstained controls)
 ::: {.fragment}
 ```{r}
 Plot <- ND006PMA$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -696,6 +820,14 @@ Lets check the "ProportionPlot" to see how these are distributed.
 ::: {.fragment}
 ```{r}
 Plot <- ND006PMA$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -726,6 +858,14 @@ If we check the Cosine plot, we can see that overall, the various signatures are
 ::: {.fragment}
 ```{r}
 Plot <- ND006PMA$CosineSimilarityPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -753,6 +893,14 @@ Data <- ND006PMA$AveragedSignature_Data |>
 ```{r}
 Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
 Plot[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot[[2]])
 ```
 

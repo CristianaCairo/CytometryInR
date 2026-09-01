@@ -4,6 +4,8 @@ author: "David Rach"
 date: 08-30-2026
 format:
   revealjs:
+    width: 960
+    height: 800
     theme: default
     slide-number: true
     incremental: true
@@ -455,6 +457,14 @@ We can start by retrieving the output of `Luciernaga_LinearSlices()`, which is s
 ::: {.fragment}
 ```{r}
 Plot <- BUV395$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -479,6 +489,14 @@ Having noted this, we can next check the stored plot present under "LuciernagaQC
 ::: {.fragment}
 ```{r}
 Plot <- BUV395$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -509,6 +527,14 @@ While we can see there are variant signatures with residual autofluorescence pre
 ::: {.fragment}
 ```{r}
 Plot <- BUV395$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -525,6 +551,22 @@ In this case, around 80% of the cells had the standard signature, while 20% of t
 ::: {.fragment}
 ```{r}
 Plot <- BUV395$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -691,6 +733,14 @@ As was the case for the BUV395, we can start by checking the "LinearSlices_Plot"
 ::: {.fragment}
 ```{r}
 Plot <- BUV496$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -715,6 +765,14 @@ We can follow up by checking the `LuciernagaQC()` output stored in "LuciernagaQC
 ::: {.fragment}
 ```{r}
 Plot <- BUV496$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -728,8 +786,10 @@ At which point, we can see only one signature is present across the board. We ca
 :::
 :::
 
+::: {.fragment}
 :::{.callout-tip title="Pass"}
 For BUV496, only 1 normalized fluorescent signature was present in the cells within the gated region of our reference control, so no changes are needed.  
+:::
 :::
 
 ---
@@ -769,6 +829,14 @@ As was the case for the previous fluorophores, we can start by checking the "Lin
 ::: {.fragment}
 ```{r}
 Plot <- BUV563$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -785,6 +853,14 @@ We have a similar situation as what we encountered with [BUV496](/course/SDY3080
 ::: {.fragment}
 ```{r}
 Plot <- BUV563$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -809,6 +885,14 @@ Lets still carry out the comparisons for practice for the upcoming fluorophores.
 ::: {.fragment}
 ```{r}
 Plot <- BUV563$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -825,6 +909,14 @@ As anticipated, minimal. How were these signatures distributed across the gated 
 ::: {.fragment}
 ```{r}
 Plot <- BUV563$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -841,6 +933,14 @@ So most cells have a secondary peak "YG2_03", with a bit of wobble on the "B4" d
 ::: {.fragment}
 ```{r}
 Plot <- BUV563$CosineSimilarityPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -907,6 +1007,14 @@ First up, the "LinearSlices_Plot" output to check whether we would have retrieve
 ::: {.fragment}
 ```{r}
 Plot <- BUV615$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -931,6 +1039,14 @@ With these differences noted, lets check out the `LuciernagaQC()` output stored 
 ::: {.fragment}
 ```{r}
 Plot <- BUV615$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -961,6 +1077,14 @@ So we have signature variants, but we don't know how prevalent they are. Lets go
 ::: {.fragment}
 ```{r}
 Plot <- BUV615$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -977,6 +1101,14 @@ Unlike the case we saw for [BUV395 CD62L](/course/SDY3080/LuciernagaIntegration.
 ::: {.fragment}
 ```{r}
 Plot <- QC_ReferenceLibrary("BUV615", returnPlots=TRUE, NumberDetectors=64)[[2]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1077,6 +1209,14 @@ And finally, lets go ahead and check the "CosineSimilarityPlots" and the "Propor
 ::: {.fragment}
 ```{r}
 Plot <- BUV615$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1087,6 +1227,14 @@ plotly::ggplotly(Plot)
 ::: {.fragment}
 ```{r}
 Plot <- BUV615$CosineSimilarityPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1146,6 +1294,14 @@ As usual, we can check the "LinearSlices_Plot", to see what the effect would hav
 ::: {.fragment}
 ```{r}
 Plot <- BUV661$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1162,6 +1318,14 @@ So far, minimal differences across the percentile bins. Lets isntead check the `
 ::: {.fragment}
 ```{r}
 Plot <- BUV661$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1178,6 +1342,14 @@ Two signature variants, with slightly different R1/R2 peak heights. When taking 
 ::: {.fragment}
 ```{r}
 Plot <- BUV661$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1265,6 +1437,14 @@ Lets first take a look at the "LinearSlices_Plot", to see if there would have be
 ::: {.fragment}
 ```{r}
 Plot <- BUV737$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1289,6 +1469,14 @@ Lets break out `LuciernagaQC()` output and see what the grouped individual cell 
 ::: {.fragment}
 ```{r}
 Plot <- BUV737$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1317,6 +1505,14 @@ Lets see if we can at least make out the main signature appearance by checking t
 ::: {.fragment}
 ```{r}
 Plot <- BUV737$LuciernagaQC_AmalgamatedPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1341,6 +1537,14 @@ Let's check "ProportionPlot" and identify the signatures that represent the majo
 ::: {.fragment}
 ```{r}
 Plot <- BUV737$ProportionPlot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1491,6 +1695,14 @@ Lets first take a look at the "LinearSlices_Plot", to see what effect would have
 ::: {.fragment}
 ```{r}
 Plot <- BUV805$LinearSlices_Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1507,6 +1719,14 @@ Pretty much no difference on the autofluorescence detectors, so very similar to 
 ::: {.fragment}
 ```{r}
 Plot <- BUV805$LuciernagaQC_Signatures
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
 plotly::ggplotly(Plot)
 ```
 
@@ -1536,8 +1756,10 @@ QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberD
 
 :::
 
+::: {.fragment}
 :::{.callout-tip title="Pass"}
 For BUV805, we only retrieved 1 signature, likely due to the antigen-fluorophore combination being a bright one, and the tandem being in good shape. We are good to proceed to the next fluorophore!
+:::
 :::
 
 ---
